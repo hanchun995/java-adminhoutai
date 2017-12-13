@@ -1,0 +1,164 @@
+def SpringVersion = '4.0.1.RELEASE'
+def JettyVersion = '8.1.14.v20131031'
+def ShiroVersion = '1.2.2'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'war'
+
+
+// gradle 自已用的
+buildscript {
+        repositories {
+	        // maven { url "http://192.168.20.243:8081/nexus/content/groups/public/" }
+	         maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+             mavenCentral()
+        }
+        dependencies {
+            // classpath "net.saliman:gradle-cobertura-plugin:2.2.2"
+        }
+}
+
+// JVM 版本号要求
+sourceCompatibility = 1.8
+targetCompatibility = 1.8  
+
+repositories {
+	//maven { url "http://192.168.20.243:8081/nexus/content/groups/public/" }
+     maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    mavenCentral()
+}
+
+
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
+
+configurations {
+     // 所有需要忽略的包定义在此
+	all*.exclude group: 'commons-logging', module: 'commons-logging'
+}
+	
+//最终的 Jar 包名，如果没设置，默认为 [baseName]-[appendix]-[version]-[classifier].[extension]
+archivesBaseName = "gdata-1.0.0"
+
+//正式环境要去掉
+//jar.exclude 'logback-test.xml'
+
+dependencies { 
+        testCompile group: 'junit', name: 'junit', version: '4.+'    
+       //compile fileTree( dir: "lib", include: '*.jar' )
+	    compile 'com.google.protobuf:protobuf-java:2.5.0'
+	    compile 'io.netty:netty:3.9.0.Final'
+	    compile 'org.slf4j:slf4j-api:1.7.5'
+		compile 'org.apache.poi:poi-ooxml:3.9'
+	    compile 'org.slf4j:jcl-over-slf4j:1.7.5'
+	    compile 'ch.qos.logback:logback-classic:1.0.13'
+         compile 'javax.mail:mail:1.4.7'
+         compile 'net.logstash.logback:logstash-logback-encoder:1.3'
+        compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
+        compile 'com.fasterxml.jackson.datatype:jackson-datatype-json-org:2.4.0'
+        compile 'com.google.guava:guava:15.0'
+	    compile "org.springframework:spring-context:${SpringVersion}"
+		compile "org.springframework:spring-context-support:${SpringVersion}"
+	   // compile "org.springframework:spring-jdbc:${SpringVersion}"
+		compile "org.eclipse.jetty:jetty-webapp:${JettyVersion}"
+	    compile 'mysql:mysql-connector-java:5.1.28'
+        compile 'org.apache.commons:commons-lang3:3.1'
+        compile 'org.javassist:javassist:3.18.0-GA'
+        compile 'org.reflections:reflections:0.9.9-RC1'
+	    compile 'org.apache.httpcomponents:httpclient:4.3.4'
+		compile 'org.apache.httpcomponents:httpmime:4.3.4'
+	    compile 'commons-beanutils:commons-beanutils:1.8.3'
+	    compile 'com.google.code.gson:gson:2.2.4'
+		compile 'commons-pool:commons-pool:1.6'
+	    compile 'com.belerweb:pinyin4j:2.5.0'
+        compile 'com.dyuproject.protostuff:protostuff-runtime:1.0.8'
+        compile 'com.dyuproject.protostuff:protostuff-core:1.0.8'
+        compile 'com.googlecode.protobuf-java-format:protobuf-java-format:1.2'
+        compile 'com.alibaba:druid:1.1.0'
+		compile 'org.aspectj:aspectjweaver:1.7.3'
+		compile 'org.aspectj:aspectjrt:1.7.3'
+        compile 'junit:junit:4.11'        
+		compile 'com.ning:async-http-client:1.8.9'
+		compile 'com.alibaba:fastjson:1.1.41'
+        compile "org.springframework:spring-web:${SpringVersion}"
+		compile "org.springframework:spring-test:${SpringVersion}"
+		compile 'org.mybatis:mybatis:3.1.0'
+		compile 'org.mybatis:mybatis-spring:1.1.0'
+		compile "org.eclipse.jetty:jetty-jsp:${JettyVersion}"
+	    compile "org.springframework:spring-web:${SpringVersion}"
+		compile "org.springframework:spring-webmvc:${SpringVersion}"
+		compile 'commons-codec:commons-codec:1.8'
+		compile 'commons-collections:commons-collections:3.2.1'
+		compile 'org.freemarker:freemarker:2.3.9'
+		//
+		compile "org.apache.shiro:shiro-core:${ShiroVersion}"
+		compile "org.apache.shiro:shiro-ehcache:${ShiroVersion}"
+		compile "org.apache.shiro:shiro-web:${ShiroVersion}"
+        compile "org.apache.shiro:shiro-quartz:${ShiroVersion}"
+		compile "org.apache.shiro:shiro-spring:${ShiroVersion}"
+		compile 'org.sitemesh:sitemesh:3.0.1'
+		compile ('com.octo.captcha:jcaptcha:1.0')	
+		{
+		exclude group: 'javax.servlet', module: 'servlet-api'
+		}	
+		//compile ('com.octo.captcha:jcaptcha-all:1.0-RC6')	
+		//{ exclude group: 'org.springframework', module: 'spring'
+		//exclude group: ' net.sf.ehcache ', module: 'ehcache'
+		//}	
+		compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.3.0.Alpha1'
+		compile group: 'cglib', name: 'cglib-nodep', version: '3.2.4'
+        compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
+        compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+        compile group: 'org.freemarker', name: 'freemarker', version: '2.3.23'
+        compile group: 'com.univocity', name: 'univocity-parsers', version: '2.2.1'
+		//compile group: 'javax.validation', name: 'validation-api', version: '1.1.0.Final'
+		//compile 'com.octo.captcha:jcaptcha:2.0-alpha-1'
+		//compile 'com.octo.captcha:jcaptcha-integration-simple-servlet:2.0-alpha-1'
+	    //compile 'net.sf.ehcache:ehcache:2.10.1'
+		//compile group: 'com.octo.captcha', name: 'jcaptcha', version: '1.0'
+	    //compile group: 'javax.enterprise', name: 'cdi-api', version: '2.0-EDR1'
+		compile group: 'org.postgresql', name: 'postgresql', version: '42.0.0'
+        compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.19.3'
+		//compile group: 'org.elasticsearch.client', name: 'rest', version: '5.5.0'
+		//compile group: 'org.elasticsearch.client', name: 'sniffer', version: '5.5.0'
+		
+}
+
+//dependencies {
+	//cargo('org.codehaus.cargo:cargo-ant:1.3.1') {
+	//transitive = false
+	//}
+	// 选择性的声明一些需要的库
+//}
+
+//Java 插件已经向项目添加了 compileJava任务和processResources任务，并且配置了这两个任务的destinationDir属性
+// 更改插件的默认设置
+processResources << {
+        file("$destinationDir/version.properties").text = 'version=' + project.version
+    }
+
+task copyLib(type: Sync, dependsOn: jar) {
+		from jar.archivePath
+		from configurations.compile
+		into 'build/deploy'
+	}
+	
+	task copyWebapp(type: Sync) {
+		from 'src/main/webapp'
+		into 'build/deploy/webapp'
+	}
+	
+//task deploy(type: Sync, dependsOn: jar) 
+task deploy(dependsOn: [copyLib,copyWebapp])
+
+
+
+ // 显示当前项目下所有用于 compile 的 jar.
+task listJars(description: 'Display all compile jars.') << {
+    configurations.compile.each { File file -> println file.name }
+}
+
+
+

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>角色管理</title>
+
+<link href="../../../common/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="../../../common/style/pager.css"	rel="stylesheet">
+<script src="../../../common/jquery/jquery-1.12.3.js"></script>
+<script src="../../../common/jquery/jquery.validate/jquery.validate.js"></script>
+<script src="../../../common/jquery/jquery.validate/jquery.validate.method.js"></script>
+<script src="../../../common/bootstrap/js/bootstrap.js"></script>
+<script src="../../../common/sys.js"></script>
+<script src="../../../common/util/common.js"></script>
+
+</head>
+
+<body style="overflow-x: hidden; overflow-y: hidden;">
+        
+        <form action="" class="breadcrumb form-search " id="_search_form">
+             &nbsp;角色名称: <input class="input-xlarge" name="roleName"  id="_roleName" type="text" />
+			 &nbsp;<input id="_search_submit" class="btn btn-primary" type="button" value="查询"/>
+		</form>
+		
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a href="rolelist.html">角色列表</a>
+		</li>
+		<li>
+			<a href="roleAdd.html">添加角色</a>
+		</li>
+	</ul>
+	
+		
+
+	<div class="panel panel-default">
+		<table id="_role_table" class="table table-striped">
+			<thead>
+				<tr>
+					<td width="10%">序号</td>
+					<td width="10%">id</td>
+					<td width="20%">角色名称</td>
+					<td width="10%">角色组</td>
+					<td width="10%">状态</td>
+					<td width="20%">创建时间</td>
+					<td width="20%">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+		
+			</tbody>
+
+		</table>
+
+    <div class="pagination" id="_pagination">
+    
+</div>
+	
+	
+	
+<script type="text/javascript">
+
+//初始化
+$(function() {
+	var param=new Object();	
+	    param.status="0";
+	//初始化数据	
+	pageFn(getContextPath()+"/sys/role/list",param,"get");
+})
+
+
+/**分页回调处理**/
+function callbak_page(returnDatas)
+{
+	var tableHTML = "";
+	//var trContext = $("#_role_table");
+	
+	var trContext = $("#_role_table tbody");
+	//$("#_role_table tbody tr").remove();
+	var returnData = returnDatas.data.items;
+	
+	if(returnData==null){
+	  return;
+	}
+	for (var i = 0; i < returnData.length; i++) {
+	var j=i;
+	//状态处理
+	//var sta=returnData[i].status;
+	var staName="";
+	//<a href="#">查看</a>
+	var operation=''
+				   +'&nbsp;&nbsp;<a href="roleUpdate.html?id='+returnData[i].id+'" >修改</a>'
+				   +'&nbsp;&nbsp;<a href="#" onclick="delRole(this,'+returnData[i].id+')">删除</a>';
+				   
+	tableHTML += "<tr>" + "<td>"
+				+ (j + 1)
+				+ "</td>"
+				+ "<td>"
+				+ returnData[i].id
+				+ "</td>"
+				+ "<td>"
+				+ returnData[i].name
+				+ "</td>"
+				+ "<td>"
+				+ returnData[i].groupId
+				+ "</td>"	
+				+ "<td>"
+				+ returnData[i].status
+				+ "</td>"
+				+ "<td>"
+				+ returnData[i].createTime
+				+ "</td>"						
+				+ "<td>"
+				+operation									
+				+"</td>" 
+				+ "</tr>"
+	
+	}
+	trContext.append(tableHTML);
+
+}
+
+//查询
+$("#_search_submit").click(
+	function(){
+	 var param=getParam();
+	 sendPageRequst(getContextPath()+"/sys/user/list",param);
+	   
+	  // sendGetReq(getContextPath()+"/sys/user/list",param,"");
+});
+
+//获取参数处理
+function getParam()
+{				
+	 var param=new Object();	
+	
+	 var _roleName=$("#_roleName").val();
+	 if(_userName!=""){
+		 param.roleName=_roleName;
+	 }
+	 
+	return param;			 
+}
+
+//删除角色
+function delRole(obj,id){
+	
+	//console.log(obj);
+	
+	var result=confirm("确定要删除角色吗？");
+	
+
+	if(!result){
+		return;
+	}
+	
+	if(id==""){
+		alert("参数错误");
+		return;
+	}
+	
+	$.ajax({
+		url : getContextPath()+"/sys/role/del",
+		type : "POST",
+		//contentType: "application/json; charset=utf-8",
+		dataType : "json",
+		//data :{productVoJson:JSON.stringify(objVo)},
+		data :{"id":id},
+		success : function(returnData,status,XMLHttpRequest)
+		{	
+			if(resolveResultBeanIsOk(returnData,status)){
+				$this=$(obj);
+				var delTr=$this.parent().parent();
+				$(delTr).remove();
+			}
+		},
+		error : function() {
+			alert("异常！");
+		}
+	});
+}
+
+
+
+</script>
+
+</body>
+</html>
